@@ -1,0 +1,196 @@
+====================================================
+LAB3 - Part 3: Graphical Analysis
+====================================================
+
+--------------------------------------------------
+SECTION 1: Time Response Analysis
+--------------------------------------------------
+
+Analyzing M1 Controllers...
+
+M1 - Step Response Characteristics:
+┌─────────────┬────────────┬─────────────┬────────────┬──────────┐
+│ Method      │ Rise Time  │ Settle Time │  Overshoot │ Peak Time│
+├─────────────┼────────────┼─────────────┼────────────┼──────────┤
+│ Z-N         │    0.891 s │    13.592 s │     7.76% │  2.820 s │
+│ AMIGO       │    2.947 s │     9.211 s │     2.80% │  7.531 s │
+│ SIMC        │    2.687 s │     8.537 s │     4.05% │  6.704 s │
+└─────────────┴────────────┴─────────────┴────────────┴──────────┘
+
+Analyzing M2 Controllers...
+
+M2 - Step Response Characteristics:
+┌─────────────┬────────────┬─────────────┬────────────┬──────────┐
+│ Method      │ Rise Time  │ Settle Time │  Overshoot │ Peak Time│
+├─────────────┼────────────┼─────────────┼────────────┼──────────┤
+│ Z-N         │    1.287 s │    19.893 s │    11.76% │  4.430 s │
+│ AMIGO       │    4.622 s │    14.952 s │     3.12% │ 11.897 s │
+│ SIMC        │    4.220 s │    13.410 s │     4.05% │ 10.528 s │
+└─────────────┴────────────┴─────────────┴────────────┴──────────┘
+
+--------------------------------------------------
+SECTION 2: Root Locus Analysis
+--------------------------------------------------
+
+Approximating time delays using 2nd-order Padé approximation...
+
+M1 Closed-Loop Poles:
+Warning: Computing approximate poles with all internal delays set to zero. Use "pole(pade(SYS,...))"  to compute
+higher-order approximations of the infinite set of poles. 
+> In ltipack.ssdata/pole
+In ltipack/SystemArray/pole_ (line 270)
+In DynamicSystem/pole (line 22)
+In LAB3_Part3_Analysis (line 156)
+In RUN_ALL_LAB3 (line 41) 
+Warning: Computing approximate poles with all internal delays set to zero. Use "pole(pade(SYS,...))"  to compute
+higher-order approximations of the infinite set of poles. 
+> In ltipack.ssdata/pole
+In ltipack/SystemArray/pole_ (line 270)
+In DynamicSystem/pole (line 22)
+In LAB3_Part3_Analysis (line 157)
+In RUN_ALL_LAB3 (line 41) 
+Warning: Computing approximate poles with all internal delays set to zero. Use "pole(pade(SYS,...))"  to compute
+higher-order approximations of the infinite set of poles. 
+> In ltipack.ssdata/pole
+In ltipack/SystemArray/pole_ (line 270)
+In DynamicSystem/pole (line 22)
+In LAB3_Part3_Analysis (line 158)
+In RUN_ALL_LAB3 (line 41) 
+  Z-N:       -0.8515   -0.2215
+
+  AMIGO:     -0.6297   -0.4533
+
+  SIMC:      -0.8658   -0.3546
+
+
+M2 Closed-Loop Poles:
+Warning: Computing approximate poles with all internal delays set to zero. Use "pole(pade(SYS,...))"  to compute
+higher-order approximations of the infinite set of poles. 
+> In ltipack.ssdata/pole
+In ltipack/SystemArray/pole_ (line 270)
+In DynamicSystem/pole (line 22)
+In LAB3_Part3_Analysis (line 165)
+In RUN_ALL_LAB3 (line 41) 
+Warning: Computing approximate poles with all internal delays set to zero. Use "pole(pade(SYS,...))"  to compute
+higher-order approximations of the infinite set of poles. 
+> In ltipack.ssdata/pole
+In ltipack/SystemArray/pole_ (line 270)
+In DynamicSystem/pole (line 22)
+In LAB3_Part3_Analysis (line 166)
+In RUN_ALL_LAB3 (line 41) 
+Warning: Computing approximate poles with all internal delays set to zero. Use "pole(pade(SYS,...))"  to compute
+higher-order approximations of the infinite set of poles. 
+> In ltipack.ssdata/pole
+In ltipack/SystemArray/pole_ (line 270)
+In DynamicSystem/pole (line 22)
+In LAB3_Part3_Analysis (line 167)
+In RUN_ALL_LAB3 (line 41) 
+  Z-N:       -0.5124   -0.1492
+
+  AMIGO:    -0.3286 + 0.0364i  -0.3286 - 0.0364i
+
+  SIMC:      -0.5168   -0.2257
+
+
+Note: Root locus plots use Padé approximation for delays.
+      Closed-loop poles shown above include exact delays.
+
+--------------------------------------------------
+SECTION 3: Bode Diagram Analysis
+--------------------------------------------------
+
+High-Frequency Gain (at 100 rad/s) - Noise Sensitivity:
+M1:
+  Z-N:    69.3035 (36.82 dB)
+  AMIGO:  29.3430 (29.35 dB)
+  SIMC:   0.4096 (-7.75 dB)
+
+M2:
+  Z-N:    116.1025 (41.30 dB)
+  AMIGO:  48.8971 (33.79 dB)
+  SIMC:   0.4368 (-7.19 dB)
+
+Note: Lower high-frequency gain = better noise rejection
+
+--------------------------------------------------
+SECTION 4: Nyquist Diagram Analysis
+--------------------------------------------------
+
+Gain Margin (GM) and Phase Margin (PM) - Robustness Indicators:
+
+M1:
+┌─────────────┬──────────────┬──────────────┐
+│ Method      │   GM (dB)    │   PM (deg)   │
+├─────────────┼──────────────┼──────────────┤
+│ Z-N         │       4.16   │      91.38   │
+│ AMIGO       │      11.06   │      65.14   │
+│ SIMC        │       9.94   │      61.35   │
+└─────────────┴──────────────┴──────────────┘
+
+M2:
+┌─────────────┬──────────────┬──────────────┐
+│ Method      │   GM (dB)    │   PM (deg)   │
+├─────────────┼──────────────┼──────────────┤
+│ Z-N         │       4.08   │      89.25   │
+│ AMIGO       │      11.05   │      64.80   │
+│ SIMC        │       9.94   │      61.35   │
+└─────────────┴──────────────┴──────────────┘
+
+Note: Higher GM and PM = more robust controller
+      Typical good values: GM > 6dB, PM > 30°
+
+--------------------------------------------------
+SECTION 5: Testing on Original Plants
+--------------------------------------------------
+
+Testing controllers on ORIGINAL plants (not reduced models)...
+
+====================================================
+FINAL SUMMARY AND RECOMMENDATIONS
+====================================================
+
+Based on the comprehensive analysis:
+
+M1 Recommended Controller: SIMC (Best robustness, moderate performance)
+
+M2 Recommended Controller: SIMC (Best robustness, moderate performance)
+
+====================================================
+Analysis Complete!
+Generated files:
+  - time_response_comparison.png
+  - root_locus_comparison.png
+  - bode_analysis.png
+  - nyquist_analysis.png
+  - original_plant_response.png
+====================================================
+
+
+========================================================
+  LAB3 Analysis Complete!                               
+========================================================
+
+All analysis completed successfully!
+
+Generated Files:
+  Data Files:
+    - LAB3_Part1_models.mat
+    - LAB3_Part2_controllers.mat
+
+  Figures:
+    - M1_identification_results.png
+    - M2_identification_results.png
+    - error_metrics_comparison.png
+    - time_response_comparison.png
+    - root_locus_comparison.png
+    - bode_analysis.png
+    - nyquist_analysis.png
+    - original_plant_response.png
+
+Next Steps:
+  1. Review all generated plots
+  2. Use the console output tables for your report
+  3. Write your technical report in CBA/SBAI format
+  4. Justify your controller selections based on the analysis
+
+========================================================
