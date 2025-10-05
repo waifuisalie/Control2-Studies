@@ -1,0 +1,214 @@
+# LAB3 Implementation Guide
+
+## Overview
+
+This directory contains a complete implementation of LAB3 (Practical Laboratory 3) for IOSC 2025-PUCPR: Critical Analysis of PID Tuning Rules.
+
+## File Structure
+
+```
+lab3_implementation/
+├── README.md                          # This file
+├── RUN_ALL_LAB3.m                     # Master script - runs everything
+├── LAB3_Part1_Identification.m        # Part 1: System identification
+├── LAB3_Part2_PID_Design.m            # Part 2: PID controller design
+├── LAB3_Part3_Analysis.m              # Part 3: Graphical analysis
+└── create_simulink_model.m            # (Optional) Creates Simulink models
+```
+
+## Quick Start
+
+### Option 1: Run Everything at Once
+
+```matlab
+cd /path/to/LAB3/lab3_implementation
+RUN_ALL_LAB3
+```
+
+This will:
+1. Identify FOPDT models for M1 and M2
+2. Design 6 PID controllers (3 methods × 2 plants)
+3. Perform comprehensive analysis
+4. Generate all plots and tables
+
+### Option 2: Run Parts Individually
+
+```matlab
+% Part 1: Identify plants
+LAB3_Part1_Identification
+
+% Part 2: Design PIDs
+LAB3_Part2_PID_Design
+
+% Part 3: Analyze and compare
+LAB3_Part3_Analysis
+```
+
+## What Each Part Does
+
+### Part 1: System Identification
+
+**File:** `LAB3_Part1_Identification.m`
+
+- Defines M1 (4th-order with delay) and M2 (3rd-order non-minimum phase)
+- Identifies first-order models with delay (FOPDT) using:
+  - Graphical method (Smith method, two-point method)
+  - MATLAB System Identification Toolbox
+- Calculates error metrics (RMSE, IAE, Total Variation)
+- Selects best model for each plant
+- **Outputs:**
+  - `LAB3_Part1_models.mat` - Identified models
+  - `M1_identification_results.png`
+  - `M2_identification_results.png`
+  - `error_metrics_comparison.png`
+
+### Part 2: PID Controller Design
+
+**File:** `LAB3_Part2_PID_Design.m`
+
+- Loads FOPDT models from Part 1
+- Calculates PID parameters using 3 tuning methods:
+  1. **Ziegler-Nichols** (FOPDT method)
+  2. **AMIGO** (Åström & Hägglund)
+  3. **Skogestad/SIMC** (Internal Model Control)
+- Creates 6 PID controllers total (3 for M1, 3 for M2)
+- Displays parameter tables
+- **Outputs:**
+  - `LAB3_Part2_controllers.mat` - All PID controllers
+
+### Part 3: Graphical Analysis
+
+**File:** `LAB3_Part3_Analysis.m`
+
+Performs 4 types of analysis as required by the lab:
+
+1. **Time Response Analysis**
+   - Settling time, overshoot, rise time, peak time
+   - Step response plots
+
+2. **Root Locus Analysis**
+   - Pole placement visualization
+   - Closed-loop poles for each controller
+
+3. **Bode Diagram Analysis**
+   - Noise sensitivity (high-frequency gain)
+   - Gain/phase margins
+
+4. **Nyquist Diagram Analysis**
+   - Robustness metrics (GM, PM)
+   - Stability analysis
+
+5. **Original Plant Testing**
+   - Tests controllers on full-order M1 and M2 (not reduced models)
+
+**Outputs:**
+- `time_response_comparison.png`
+- `root_locus_comparison.png`
+- `bode_analysis.png`
+- `nyquist_analysis.png`
+- `original_plant_response.png`
+
+## PID Tuning Methods Used
+
+### 1. Ziegler-Nichols (Z-N)
+- Classic method, typically aggressive
+- Good for fast response
+- May have significant overshoot
+- Formula based on FOPDT parameters (K, T, θ)
+
+### 2. AMIGO
+- More conservative than Z-N
+- Better disturbance rejection
+- Improved overshoot characteristics
+- Good balance between performance and robustness
+
+### 3. Skogestad/SIMC
+- Most conservative (robust)
+- Often produces PI controllers (Kd = 0)
+- Excellent robustness (high phase margin)
+- May be slower than other methods
+
+## Understanding the Results
+
+### Time Response Metrics
+
+- **Rise Time:** How quickly the output reaches the setpoint (lower = faster)
+- **Settling Time:** Time to stay within 2% of setpoint (lower = faster)
+- **Overshoot:** Peak above setpoint as percentage (lower = less oscillation)
+- **Peak Time:** Time to reach maximum overshoot
+
+### Robustness Metrics
+
+- **Gain Margin (GM):** How much gain can increase before instability
+  - Good: GM > 6 dB
+  - Excellent: GM > 12 dB
+
+- **Phase Margin (PM):** How much phase lag before instability
+  - Good: PM > 30°
+  - Excellent: PM > 60°
+
+### Noise Sensitivity
+
+- **High-frequency gain:** Controller gain at high frequencies
+  - Lower = better noise rejection
+  - High derivative gain → high noise amplification
+
+## Choosing the Best Controller
+
+Consider these trade-offs:
+
+| Criterion | Favor |
+|-----------|-------|
+| Fast response | Z-N |
+| Low overshoot | AMIGO or SIMC |
+| Robustness | SIMC |
+| Noise rejection | SIMC (lower Kd) |
+| Balance | AMIGO |
+
+The script automatically suggests controllers based on these criteria.
+
+## For Your Report
+
+The lab requires a technical report (CBA/SBAI format, max 6 pages) with:
+
+1. **Brief theory** of the 3 tuning methods
+2. **Methodology** - how you applied each method
+3. **Results:**
+   - All plots generated by the scripts
+   - Tables from console output (copy-paste from MATLAB)
+4. **Detailed conclusion:**
+   - Comparison of all methods
+   - Justification for controller selection
+   - Strengths and weaknesses of each method
+
+**Tip:** The console output includes formatted tables you can copy directly into your report!
+
+## Troubleshooting
+
+### "Part X models not found"
+- Make sure to run parts in order (1 → 2 → 3)
+- Or use `RUN_ALL_LAB3.m`
+
+### "System Identification Toolbox not available"
+- The scripts will fall back to graphical methods
+- Results will still be valid
+
+### Plots look wrong
+- Check that your models are stable
+- Verify FOPDT parameters are reasonable (K, T, θ > 0)
+
+## Notes
+
+- The implementation follows the structure of `novo.slx` (your friend's Simulink model)
+- M2 has inverse response (non-minimum phase zero) - this is normal!
+- All methods work on the reduced FOPDT models, then test on original plants
+- Generated plots are saved automatically in the current directory
+
+## Questions?
+
+Refer to:
+- LAB3 assignment PDF (`IOSC_2025B_Lab03.pdf`)
+- CLAUDE.md in the repository root
+- Your friend's `novo.slx` for reference
+
+Good luck with your report! 🎓

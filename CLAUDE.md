@@ -16,6 +16,13 @@ This is a control systems engineering repository for laboratory assignments (IOS
     - `matlab.mat`: MATLAB workspace data
 - **LAB3/**: PID controller tuning analysis lab
   - `IOSC_2025B_Lab03.pdf`: Lab instructions for critical analysis of PID tuning rules
+  - **lab3_implementation/**: Complete LAB3 implementation
+    - `RUN_ALL_LAB3.m`: Master script to run all parts
+    - `LAB3_Part1_Identification.m`: FOPDT model identification
+    - `LAB3_Part2_PID_Design.m`: PID tuning (Z-N, AMIGO, SIMC)
+    - `LAB3_Part3_Analysis.m`: Comprehensive graphical analysis
+    - `README.md`: Detailed usage guide
+  - `novo.slx`: Reference Simulink model (friend's implementation)
 
 ## Key Technical Concepts
 
@@ -44,17 +51,34 @@ M(s) = 1·e^(-s) / [(s+1)(0.4s+1)(0.4²s+1)(0.4³s+1)]
 
 ### LAB3: PID Tuning Analysis
 
+**Objectives:**
+- Design PID controllers using 3 different tuning rules
+- Compare performance and robustness characteristics
+- Select best controller for each plant based on analysis
+
 **Plants to analyze:**
 ```
-M1(s) = 1·e^(-s) / [(s+1)(0.4s+1)(0.4²s+1)(0.4³s+1)]
-M2(s) = (-1.1s+1) / (s³+3s²+3s+1)
+M1(s) = 1·e^(-s) / [(s+1)(0.4s+1)(0.4²s+1)(0.4³s+1)]  [4th-order with delay]
+M2(s) = (-1.1s+1) / (s³+3s²+3s+1)  [3rd-order, non-minimum phase]
 ```
 
+**PID Tuning Methods:**
+1. **Ziegler-Nichols (Z-N):** Classic FOPDT method - fast but may overshoot
+2. **AMIGO:** Åström & Hägglund - balanced performance/robustness
+3. **Skogestad/SIMC:** Internal Model Control - most robust, often PI
+
 **Analysis methods:**
-- Root locus for pole placement analysis
-- Bode diagrams for noise sensitivity
+- Time response analysis (settling time, overshoot, rise time, peak time)
+- Root locus for pole placement and stability analysis
+- Bode diagrams for noise sensitivity (high-frequency gain)
 - Nyquist diagrams for robustness (gain/phase margins)
-- Time domain response analysis (settling time, overshoot)
+- Testing on original plants (not just reduced models)
+
+**Key Metrics:**
+- Gain Margin (GM): Good if > 6 dB
+- Phase Margin (PM): Good if > 30°
+- Overshoot: Lower is better for most applications
+- Settling Time: How quickly system reaches steady state
 
 ## MATLAB/Simulink Workflow
 
@@ -71,6 +95,26 @@ The script automatically:
 3. Runs Simulink simulation `lab2_malha_aberta.slx`
 4. Generates comparison plots (3 figures)
 5. Calculates and displays RMSE, IAE, and Total Variation for all models
+
+### Running Lab 3 Analysis
+
+```matlab
+cd LAB3/lab3_implementation/
+RUN_ALL_LAB3  % Runs complete LAB3 pipeline
+```
+
+Or run parts individually:
+```matlab
+LAB3_Part1_Identification  % Identify FOPDT models for M1 and M2
+LAB3_Part2_PID_Design      % Design PIDs using 3 tuning methods
+LAB3_Part3_Analysis        % Comprehensive graphical analysis
+```
+
+The pipeline:
+1. **Part 1:** Identifies FOPDT models (K, T, θ) using graphical and toolbox methods
+2. **Part 2:** Calculates PID parameters (Kp, Ki, Kd) for 6 controllers
+3. **Part 3:** Generates all required plots and comparison tables
+4. **Outputs:** 8 PNG figures + 2 MAT files with all results
 
 ### Key MATLAB Commands
 
