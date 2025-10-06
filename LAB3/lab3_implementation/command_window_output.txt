@@ -1,4 +1,169 @@
 ====================================================
+LAB3 - Part 1: FOPDT Model Identification
+====================================================
+
+M1(s) = 1*e^(-s) / [(s+1)(0.4s+1)(0.16s+1)(0.064s+1)]
+
+M2(s) = (-1.1s + 1) / (s^3 + 3s^2 + 3s + 1)
+Note: M2 has non-minimum phase zero (inverse response)
+
+--------------------------------------------------
+IDENTIFYING M1...
+--------------------------------------------------
+
+Method 1: Graphical Identification (Smith Method)
+  Steady-state gain K = 1.0000
+  Delay θ = 1.4100 s
+  Time constant T = 1.1550 s
+
+Method 2: System Identification Toolbox
+Warning: For transient data (step or impulse experiment), make sure that the change in input signal does not happen too early
+relative to the order of the desired model. You can achieve this by prepending sufficient number of zeros (equilibrium values) to
+the input and output signals. For example, a step input must be represented as [zeros(nx,1); ones(N,1)] rather than ones(N,1), such
+that nx > model order. 
+> In idpack.utValidateEstimationData (line 105)
+In idpack.utPrepareEstimationOptions (line 62)
+In tfest>localValidateInputs (line 393)
+In tfest (line 129)
+In LAB3_Part1_Identification (line 91)
+In RUN_ALL_LAB3 (line 24) 
+  K = 1.0209, T = 2.2349 s, θ = 0.0000 s
+
+Error Metrics for M1:
+  Graphical Model: RMSE=0.0154, IAE=0.1106, TV=1.0000
+  Toolbox Model:   RMSE=0.1077, IAE=1.0647, TV=1.0208
+
+--------------------------------------------------
+IDENTIFYING M2...
+--------------------------------------------------
+
+Method 1: Graphical Identification (Adapted for Inverse Response)
+  Steady-state gain K = 1.0000
+  Minimum value = -0.1225 at t = 1.0500 s
+  Time constant T = 1.9350 s
+  Delay θ = 2.2150 s
+
+Method 2: System Identification Toolbox
+Warning: For transient data (step or impulse experiment), make sure that the change in input signal does not happen too early
+relative to the order of the desired model. You can achieve this by prepending sufficient number of zeros (equilibrium values) to
+the input and output signals. For example, a step input must be represented as [zeros(nx,1); ones(N,1)] rather than ones(N,1), such
+that nx > model order. 
+> In idpack.utValidateEstimationData (line 105)
+In idpack.utPrepareEstimationOptions (line 62)
+In tfest>localValidateInputs (line 393)
+In tfest (line 129)
+In LAB3_Part1_Identification (line 202)
+In RUN_ALL_LAB3 (line 24) 
+  K = 1.0463, T = 3.4715 s, θ = 0.0000 s
+
+Error Metrics for M2:
+  Graphical Model: RMSE=0.0306, IAE=0.3424, TV=0.9999
+  Toolbox Model:   RMSE=0.1474, IAE=1.6581, TV=1.0430
+
+====================================================
+SUMMARY: Best FOPDT Models for PID Design
+====================================================
+
+M1 Selected Model (Graphical):
+  K = 1.0000, T = 1.1550 s, θ = 1.4100 s
+  G1(s) = 1.0000 * e^(-1.4100s) / (1.1550s + 1)
+
+M2 Selected Model (Graphical):
+  K = 1.0000, T = 1.9350 s, θ = 2.2150 s
+  G2(s) = 1.0000 * e^(-2.2150s) / (1.9350s + 1)
+
+Generating plots...
+
+Saving results to LAB3_Part1_models.mat...
+
+====================================================
+Part 1 Complete!
+Models saved for Part 2 (PID Design)
+====================================================
+
+====================================================
+LAB3 - Part 2: PID Controller Design
+====================================================
+
+Loaded FOPDT Models:
+M1: K=1.0000, T=1.1550 s, θ=1.4100 s
+M2: K=1.0000, T=1.9350 s, θ=2.2150 s
+
+--------------------------------------------------
+TUNING RULE #1: Ziegler-Nichols (FOPDT Method)
+--------------------------------------------------
+
+M1 - Ziegler-Nichols PID:
+  Kp = 0.9830
+  Ki = 0.3486
+  Kd = 0.6930
+
+M2 - Ziegler-Nichols PID:
+  Kp = 1.0483
+  Ki = 0.2366
+  Kd = 1.1610
+
+--------------------------------------------------
+TUNING RULE #2: AMIGO
+--------------------------------------------------
+
+M1 - AMIGO PID:
+  Kp = 0.5686
+  Ki = 0.4134
+  Kd = 0.2934
+
+M2 - AMIGO PID:
+  Kp = 0.5931
+  Ki = 0.2650
+  Kd = 0.4890
+
+--------------------------------------------------
+TUNING RULE #3: Skogestad/SIMC
+--------------------------------------------------
+
+M1 - Skogestad/SIMC PID:
+  Kp = 0.4096
+  Ki = 0.3546
+  Kd = 0.0000
+  (Note: SIMC typically yields PI controller)
+
+M2 - Skogestad/SIMC PID:
+  Kp = 0.4368
+  Ki = 0.2257
+  Kd = 0.0000
+
+====================================================
+SUMMARY: PID Controller Parameters
+====================================================
+
+M1 Controllers:
+┌─────────────┬──────────┬──────────┬──────────┐
+│ Method      │   Kp     │   Ki     │   Kd     │
+├─────────────┼──────────┼──────────┼──────────┤
+│ Z-N         │   0.9830 │   0.3486 │   0.6930 │
+│ AMIGO       │   0.5686 │   0.4134 │   0.2934 │
+│ SIMC        │   0.4096 │   0.3546 │   0.0000 │
+└─────────────┴──────────┴──────────┴──────────┘
+
+M2 Controllers:
+┌─────────────┬──────────┬──────────┬──────────┐
+│ Method      │   Kp     │   Ki     │   Kd     │
+├─────────────┼──────────┼──────────┼──────────┤
+│ Z-N         │   1.0483 │   0.2366 │   1.1610 │
+│ AMIGO       │   0.5931 │   0.2650 │   0.4890 │
+│ SIMC        │   0.4368 │   0.2257 │   0.0000 │
+└─────────────┴──────────┴──────────┴──────────┘
+
+Creating closed-loop systems for analysis...
+
+Saving PID controllers to LAB3_Part2_controllers.mat...
+
+====================================================
+Part 2 Complete!
+PID controllers designed and saved for Part 3
+====================================================
+
+====================================================
 LAB3 - Part 3: Graphical Analysis
 ====================================================
 
@@ -35,27 +200,27 @@ SECTION 2: Root Locus Analysis
 Approximating time delays using 2nd-order Padé approximation...
 
 M1 Closed-Loop Poles:
-Warning: Computing approximate poles with all internal delays set to zero. Use "pole(pade(SYS,...))"  to compute
-higher-order approximations of the infinite set of poles. 
+Warning: Computing approximate poles with all internal delays set to zero. Use "pole(pade(SYS,...))"  to compute higher-order
+approximations of the infinite set of poles. 
 > In ltipack.ssdata/pole
 In ltipack/SystemArray/pole_ (line 270)
 In DynamicSystem/pole (line 22)
 In LAB3_Part3_Analysis (line 156)
-In RUN_ALL_LAB3 (line 41) 
-Warning: Computing approximate poles with all internal delays set to zero. Use "pole(pade(SYS,...))"  to compute
-higher-order approximations of the infinite set of poles. 
+In RUN_ALL_LAB3 (line 42) 
+Warning: Computing approximate poles with all internal delays set to zero. Use "pole(pade(SYS,...))"  to compute higher-order
+approximations of the infinite set of poles. 
 > In ltipack.ssdata/pole
 In ltipack/SystemArray/pole_ (line 270)
 In DynamicSystem/pole (line 22)
 In LAB3_Part3_Analysis (line 157)
-In RUN_ALL_LAB3 (line 41) 
-Warning: Computing approximate poles with all internal delays set to zero. Use "pole(pade(SYS,...))"  to compute
-higher-order approximations of the infinite set of poles. 
+In RUN_ALL_LAB3 (line 42) 
+Warning: Computing approximate poles with all internal delays set to zero. Use "pole(pade(SYS,...))"  to compute higher-order
+approximations of the infinite set of poles. 
 > In ltipack.ssdata/pole
 In ltipack/SystemArray/pole_ (line 270)
 In DynamicSystem/pole (line 22)
 In LAB3_Part3_Analysis (line 158)
-In RUN_ALL_LAB3 (line 41) 
+In RUN_ALL_LAB3 (line 42) 
   Z-N:       -0.8515   -0.2215
 
   AMIGO:     -0.6297   -0.4533
@@ -64,27 +229,27 @@ In RUN_ALL_LAB3 (line 41)
 
 
 M2 Closed-Loop Poles:
-Warning: Computing approximate poles with all internal delays set to zero. Use "pole(pade(SYS,...))"  to compute
-higher-order approximations of the infinite set of poles. 
+Warning: Computing approximate poles with all internal delays set to zero. Use "pole(pade(SYS,...))"  to compute higher-order
+approximations of the infinite set of poles. 
 > In ltipack.ssdata/pole
 In ltipack/SystemArray/pole_ (line 270)
 In DynamicSystem/pole (line 22)
 In LAB3_Part3_Analysis (line 165)
-In RUN_ALL_LAB3 (line 41) 
-Warning: Computing approximate poles with all internal delays set to zero. Use "pole(pade(SYS,...))"  to compute
-higher-order approximations of the infinite set of poles. 
+In RUN_ALL_LAB3 (line 42) 
+Warning: Computing approximate poles with all internal delays set to zero. Use "pole(pade(SYS,...))"  to compute higher-order
+approximations of the infinite set of poles. 
 > In ltipack.ssdata/pole
 In ltipack/SystemArray/pole_ (line 270)
 In DynamicSystem/pole (line 22)
 In LAB3_Part3_Analysis (line 166)
-In RUN_ALL_LAB3 (line 41) 
-Warning: Computing approximate poles with all internal delays set to zero. Use "pole(pade(SYS,...))"  to compute
-higher-order approximations of the infinite set of poles. 
+In RUN_ALL_LAB3 (line 42) 
+Warning: Computing approximate poles with all internal delays set to zero. Use "pole(pade(SYS,...))"  to compute higher-order
+approximations of the infinite set of poles. 
 > In ltipack.ssdata/pole
 In ltipack/SystemArray/pole_ (line 270)
 In DynamicSystem/pole (line 22)
 In LAB3_Part3_Analysis (line 167)
-In RUN_ALL_LAB3 (line 41) 
+In RUN_ALL_LAB3 (line 42) 
   Z-N:       -0.5124   -0.1492
 
   AMIGO:    -0.3286 + 0.0364i  -0.3286 - 0.0364i
@@ -165,6 +330,141 @@ Generated files:
   - original_plant_response.png
 ====================================================
 
+====================================================
+LAB3 - Part 4: Controller Selection & Report
+====================================================
+
+Loaded data from Part 2...
+Recalculating all performance metrics...
+
+All metrics recalculated successfully.
+
+--------------------------------------------------
+SECTION 1: Weighted Scoring and Ranking
+--------------------------------------------------
+
+Scoring Weights:
+  Speed (rise + settling): 20%
+  Overshoot:              25%
+  Robustness (GM + PM):   30%
+  Noise Rejection:        25%
+
+M1 - Overall Scores (0-100):
+┌─────────────┬─────────┬─────────┬─────────┬─────────┬─────────┐
+│ Method      │  Speed  │Overshoot│ Robust. │  Noise  │  TOTAL  │
+├─────────────┼─────────┼─────────┼─────────┼─────────┼─────────┤
+│ Z-N         │    50.0 │     0.0 │    50.0 │     0.0 │    25.0 │
+│ AMIGO       │    43.3 │   100.0 │    56.3 │    16.7 │    54.7 │
+│ SIMC        │    56.3 │    74.8 │    41.9 │   100.0 │    67.5 │
+└─────────────┴─────────┴─────────┴─────────┴─────────┴─────────┘
+
+M1 Winner: SIMC (Score: 67.5/100)
+
+M2 - Overall Scores (0-100):
+┌─────────────┬─────────┬─────────┬─────────┬─────────┬─────────┐
+│ Method      │  Speed  │Overshoot│ Robust. │  Noise  │  TOTAL  │
+├─────────────┼─────────┼─────────┼─────────┼─────────┼─────────┤
+│ Z-N         │    50.0 │     0.0 │    50.0 │     0.0 │    25.0 │
+│ AMIGO       │    38.1 │   100.0 │    56.2 │    15.5 │    53.3 │
+│ SIMC        │    56.0 │    89.2 │    42.1 │   100.0 │    71.1 │
+└─────────────┴─────────┴─────────┴─────────┴─────────┴─────────┘
+
+M2 Winner: SIMC (Score: 71.1/100)
+
+--------------------------------------------------
+SECTION 2: Detailed Controller Selection
+--------------------------------------------------
+
+=== M1 SELECTED CONTROLLER: SIMC ===
+
+JUSTIFICATION:
+Based on weighted multi-criteria analysis, SIMC provides the
+best overall performance for M1 with a score of 67.5/100.
+
+KEY STRENGTHS:
+  • Settling Time: 8.54 s (Rank 1/3)
+  • Overshoot: 4.05% (Rank 2/3)
+  • Gain Margin: 9.94 dB (Rank 2/3)
+  • Phase Margin: 61.35° (Rank 3/3)
+  • Noise Rejection: -7.75 dB @100rad/s (Rank 1/3)
+
+COMPARISON WITH ALTERNATIVES:
+  Z-N: Score 25.0/100 - Low GM (4.16 dB < 6dB threshold)
+  AMIGO: Score 54.7/100 - Lower overall score
+
+=== M2 SELECTED CONTROLLER: SIMC ===
+
+JUSTIFICATION:
+Based on weighted multi-criteria analysis, SIMC provides the
+best overall performance for M2 with a score of 71.1/100.
+
+KEY STRENGTHS:
+  • Settling Time: 13.41 s (Rank 1/3)
+  • Overshoot: 4.05% (Rank 2/3)
+  • Gain Margin: 9.94 dB (Rank 2/3)
+  • Phase Margin: 61.35° (Rank 3/3)
+  • Noise Rejection: -7.19 dB @100rad/s (Rank 1/3)
+
+NOTE: M2 is non-minimum phase (inverse response), making control
+more challenging. The selected controller handles this well.
+
+COMPARISON WITH ALTERNATIVES:
+  Z-N: Score 25.0/100 - Low GM (4.08 dB < 6dB threshold)
+  AMIGO: Score 53.3/100 - Lower overall score
+
+--------------------------------------------------
+SECTION 3: Generating Visualizations
+--------------------------------------------------
+
+  Created: metrics_comparison.png
+  Created: overall_scores.png
+  Created: performance_radar.png
+
+--------------------------------------------------
+SECTION 4: Testing on Original Plants
+--------------------------------------------------
+
+Testing SIMC on M1 (original 4th-order plant)...
+Testing SIMC on M2 (original 3rd-order plant)...
+
+Performance on Original Plants:
+M1 (SIMC): Rise=2.60s, Settle=8.77s, Overshoot=6.81%
+M2 (SIMC): Rise=3.71s, Settle=11.68s, Overshoot=5.28%
+
+  Created: selected_controllers_performance.png
+
+--------------------------------------------------
+SECTION 5: Generating Report Text
+--------------------------------------------------
+
+  Created: LAB3_Part4_Report_Text.txt
+
+Saving all metrics and scores...
+  Created: LAB3_Part4_metrics.mat
+
+====================================================
+PART 4 COMPLETE - FINAL RECOMMENDATIONS
+====================================================
+
+SELECTED CONTROLLERS:
+  M1: SIMC (Score: 67.5/100)
+  M2: SIMC (Score: 71.1/100)
+
+GENERATED FILES:
+  Figures:
+    - metrics_comparison.png (6-panel comparison)
+    - overall_scores.png (bar charts)
+    - performance_radar.png (radar charts)
+    - selected_controllers_performance.png (final testing)
+  Data:
+    - LAB3_Part4_metrics.mat (all scores and metrics)
+  Report:
+    - LAB3_Part4_Report_Text.txt (ready for copy-paste)
+
+====================================================
+All analysis complete! Ready for report writing.
+====================================================
+
 
 ========================================================
   LAB3 Analysis Complete!                               
@@ -176,21 +476,27 @@ Generated Files:
   Data Files:
     - LAB3_Part1_models.mat
     - LAB3_Part2_controllers.mat
+    - LAB3_Part4_metrics.mat
 
-  Figures:
-    - M1_identification_results.png
-    - M2_identification_results.png
-    - error_metrics_comparison.png
-    - time_response_comparison.png
-    - root_locus_comparison.png
-    - bode_analysis.png
-    - nyquist_analysis.png
-    - original_plant_response.png
+  Figures (12 total):
+    Part 1: M1_identification_results.png
+    Part 1: M2_identification_results.png
+    Part 1: error_metrics_comparison.png
+    Part 3: time_response_comparison.png
+    Part 3: root_locus_comparison.png
+    Part 3: bode_analysis.png
+    Part 3: nyquist_analysis.png
+    Part 3: original_plant_response.png
+    Part 4: metrics_comparison.png
+    Part 4: overall_scores.png
+    Part 4: performance_radar.png
+    Part 4: selected_controllers_performance.png
+
+  Report Text:
+    - LAB3_Part4_Report_Text.txt (ready to copy-paste)
 
 Next Steps:
-  1. Review all generated plots
-  2. Use the console output tables for your report
-  3. Write your technical report in CBA/SBAI format
-  4. Justify your controller selections based on the analysis
-
-========================================================
+  1. Review all 12 generated plots
+  2. Read LAB3_Part4_Report_Text.txt for report content
+  3. Use console output tables for your CBA/SBAI report
+  4. Include selected controller justifications in conclusion

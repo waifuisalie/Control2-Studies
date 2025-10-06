@@ -1,0 +1,63 @@
+========================================
+LAB3 PART 4: FINAL REPORT TEXT
+========================================
+
+--- CONTROLLER SELECTION SUMMARY ---
+
+Plant M1: SIMC Controller
+Plant M2: SIMC Controller
+
+--- M1 JUSTIFICATION ---
+
+For the M1 plant (4th-order system with delay), the SIMC tuning method
+was selected based on comprehensive multi-criteria analysis. This controller
+achieved the highest overall performance score (67.5/100) when evaluated against
+weighted criteria including speed (20%), overshoot (25%), robustness (30%),
+and noise rejection (25%).
+
+Key performance metrics on the reduced FOPDT model:
+  - Settling Time: 8.54 s
+  - Overshoot: 4.05%
+  - Gain Margin: 9.94 dB
+  - Phase Margin: 61.35 degrees
+
+When tested on the original 4th-order plant, the controller maintained
+stable performance with 6.81% overshoot and 8.77 s settling time,
+validating the effectiveness of the FOPDT model reduction approach.
+
+--- M2 JUSTIFICATION ---
+
+For the M2 plant (3rd-order non-minimum phase system), the SIMC tuning method
+was selected. This controller achieved the highest overall score (71.1/100)
+and demonstrated superior handling of the inverse response characteristic
+inherent to non-minimum phase systems.
+
+Key performance metrics on the reduced FOPDT model:
+  - Settling Time: 13.41 s
+  - Overshoot: 4.05%
+  - Gain Margin: 9.94 dB
+  - Phase Margin: 61.35 degrees
+
+--- METHODOLOGY RECAP ---
+
+Three PID tuning methods were evaluated:
+1. Ziegler-Nichols (Z-N): Classic FOPDT method, typically aggressive
+2. AMIGO: Balanced approach by Astrom & Hagglund
+3. Skogestad SIMC: Conservative, robust IMC-based method
+
+Controllers were compared using:
+  - Time domain: Step response (rise time, settling time, overshoot)
+  - Frequency domain: Bode (noise sensitivity), Nyquist (margins)
+  - Stability: Root locus, gain/phase margins
+  - Validation: Testing on original higher-order plants
+
+--- CONCLUSIONS ---
+
+The selected controllers provide optimal balance between performance and
+robustness for their respective plants. The SIMC method for M1 and
+SIMC method for M2 outperformed alternatives in weighted multi-criteria
+evaluation, demonstrating that no single tuning method is universally optimal.
+Controller selection should consider plant characteristics, application
+requirements, and performance trade-offs.
+
+========================================
